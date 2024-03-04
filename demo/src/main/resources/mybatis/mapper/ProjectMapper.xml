@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ProjectMapper">
+    <resultMap id="projectMap" type="com.example.demo.model.Project">
+        <id column="id" property="id"/>
+        <id column="project_name" property="project_name"/>
+        <id column="place" property="place"/>
+        <id column="mail" property="mail"/>
+        <id column="tag" property="tag"/>
+    </resultMap>
+    <resultMap id="userMap" type="com.example.demo.model.User">
+        <id column="id" property="id"/>
+        <id column="name" property="name"/>
+        <id column="age" property="age"/>
+        <id column="mail" property="mail"/>
+        <id column="password" property="password"/>
+    </resultMap>
+
+    <select id="getProjectLists" parameterType="com.example.demo.model.ProjectSelectDemo" resultMap="projectMap">
+        select * from project
+    </select>
+
+    <insert parameterType="com.example.demo.model.Project" id="createProject">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into project(`project_name`, place, mail, tag)
+        values (#{project_name}, #{place}, #{mail}, #{tag})
+    </insert>
+
+    <update parameterType="com.example.demo.model.Project" id="updateProject" useGeneratedKeys="true" keyProperty="id">
+        update
+            project
+        set
+            project.project_name = #{project_name},
+            project.place = #{place},
+            project.mail = #{mail},
+            project.tag = #{tag}
+        where
+            project.id = #{id}
+        <selectKey resultType="com.example.demo.model.Project" order="AFTER" keyProperty="id">
+            select * from project where id = #{id}
+        </selectKey>
+    </update>
+
+    <delete id="deleteProject">
+        DELETE FROM project WHERE id in (${ids})
+<!--        delete from project where id in-->
+<!--        <foreach collection="ids" item="id" separator="," open="(" close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+    </delete>
+</mapper>
