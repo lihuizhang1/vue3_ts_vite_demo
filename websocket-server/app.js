@@ -18,8 +18,12 @@ server.on('connection',function connection(ws, req) {
     console.log('监听消息')
     ws.on('message', function(msg) {
         let data = JSON.parse(msg);
-        if(data.type == ""){
-            ws.send(JSON.stringify(""))
+        console.log(data);
+        if(data.type == "showData"){
+            ws.send(JSON.stringify("this is show text!"))
+        }else if(data.type == "updateData"){
+            ws.send(JSON.stringify("this is update text!"))
         }
+        
     })
 })
