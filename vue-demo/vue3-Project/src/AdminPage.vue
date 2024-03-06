@@ -1,6 +1,6 @@
 <template>
     <div class="home-body" ref="homeBody">
-        <el-container style="place-content: center;align-items: center;margin-top: 25%"
+        <el-container style="place-content: center;align-items: center;margin-top: 22%"
                       v-if="router.currentRoute.value.path === '/login'">
             <RouterView/>
         </el-container>

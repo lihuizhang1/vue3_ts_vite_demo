@@ -15,4 +15,16 @@
         and
             password = #{password,jdbcType=VARCHAR}
     </select>
+    <select id="selectUser" parameterType="com.example.demo.model.User" resultMap="userMap">
+        select * from user
+        where
+            name = #{name,jdbcType=VARCHAR}
+    </select>
+    <insert parameterType="com.example.demo.model.User" id="signUpUser">
+<!--        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">-->
+<!--            select LAST_INSERT_ID()-->
+<!--        </selectKey>-->
+        insert into user(`name`, password)
+        values (#{name}, #{password})
+    </insert>
 </mapper>

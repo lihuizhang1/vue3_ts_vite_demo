@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
     User loginUser(User user);
+    int signUpUser(User user);
+    User selectUser(User user);
 }

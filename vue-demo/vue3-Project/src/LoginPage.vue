@@ -8,9 +8,17 @@
                 <el-form-item label="password:">
                     <el-input v-model="user.password" placeholder="admin"></el-input>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item v-show="!signUpFlag">
                     <el-button @click="clear()">clear</el-button>
                     <el-button @click="setLogin()" type="primary">login</el-button>
+                    <el-button @click="changeSignUpFlag()"
+                               style="background-color: aliceblue;border: aliceblue;margin-left: 30px;">
+                        sign up
+                    </el-button>
+                </el-form-item>
+                <el-form-item v-show="signUpFlag">
+                    <el-button @click="changeSignUpFlag()">cancel</el-button>
+                    <el-button @click="signUp()" type="primary">signUp</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -26,8 +34,7 @@ import {ref, reactive, onMounted} from "vue";
 import {useRouter, RouterLink, RouterView } from 'vue-router'
 
 const router = useRouter();
-let homeBody = ref();
-let loginFlag = ref(false);
+let signUpFlag = ref(false);
 let user = reactive({
     id: '',
     name: '001',
@@ -40,29 +47,50 @@ let setLogin = () => {
     if(user.name.length > 0 && user.password.length > 0){
         axios.post('/api/user/loginUser', user).then(res => {
             if(res.data){
-                loginFlag.value = true;
                 LocalCache.setCathe('loginUser', res.data);
                 router.push('/home');
             }else{
-                loginFlag.value = false;
                 alert("login failed!")
             }
         }).catch(err => {
-            loginFlag.value = false;
         })
     }else {
-        alert("please input mail and password!")
+        alert("please input name and password!")
     }
 }
 let clear = () => {
     user.name = '';
     user.password = '';
 }
+
+const changeSignUpFlag =()=>{
+    signUpFlag.value = !signUpFlag.value;
+}
+
+const signUp =()=>{
+    if(user.name.length > 0 && user.password.length > 0){
+        axios.post('/api/user/signUp', user).then(res => {
+            if(res.data){
+                if(res.data == 1){
+                    LocalCache.setCathe('loginUser', res.data);
+                    router.push('/home');
+                }else{
+                    alert("User already exists!")
+                }
+            }else{
+                alert("Login failed!")
+            }
+        }).catch(err => {
+        })
+    }else {
+        alert("please input name and password!")
+    }
+}
+
 onMounted(()=>{
     loginUser = LocalCache.getCache('loginUser');
     if(loginUser){
-        loginFlag.value = true;
-        // router.push('/home');
+        router.push('/home');
     }
 })
 

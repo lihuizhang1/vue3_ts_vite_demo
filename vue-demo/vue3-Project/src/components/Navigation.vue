@@ -21,9 +21,9 @@
                     <el-icon><icon-menu /></el-icon>
                     <span>Project</span>
                 </el-menu-item>
-                <el-menu-item index="3" disabled>
+                <el-menu-item index="3">
                     <el-icon><location /></el-icon>
-                    <span>Customer</span>
+                    <span>Test</span>
                 </el-menu-item>
 
                 <el-sub-menu index="4">
@@ -86,7 +86,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
             router.push('/project');
             break;
         case "3":
-            selectNavName.value = "customer";
+            selectNavName.value = "test";
+            router.push('/test');
             break;
         case "4":
             selectNavName.value = "setting";

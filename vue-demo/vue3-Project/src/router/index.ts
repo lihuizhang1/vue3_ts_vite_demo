@@ -5,6 +5,7 @@ import AdminPage from "@/AdminPage.vue";
 import ProjectCreate from "@/views/project/ProjectCreate.vue";
 import HomeView from "@/views/HomeView.vue";
 import Home from "@/views/home/Home.vue";
+import TestPage from "@/views/test/TestPage.vue";
 // import useStore from "element-plus/lib/components/table/src/store";
 
 const router = createRouter({
@@ -34,6 +35,11 @@ const router = createRouter({
       path: '/project/create',
       name: 'projectCreate',
       component: ProjectCreate
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: TestPage
     },
   ]
 })

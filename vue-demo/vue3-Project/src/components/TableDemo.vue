@@ -1,58 +1,15 @@
 <template>
     <el-container>
-        <el-header>
-            <el-page-header @back="goBack">
-                <template #breadcrumb>
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item :to="{ path: './project' }">
-                            project
-                        </el-breadcrumb-item>
-                        <el-breadcrumb-item>
-                            lists
-                        </el-breadcrumb-item>
-<!--                        <el-breadcrumb-item>route 2</el-breadcrumb-item>-->
-                    </el-breadcrumb>
-                </template>
-                <template #content>
-                    <span class="text-large font-600 mr-3"> Project Page </span>
-                </template>
-                <template #extra>
-                    <el-button type="success" class="ml-2" @click="signOut()">sign out</el-button>
-                </template>
-            </el-page-header>
-        </el-header>
         <el-main>
             <div v-if="projectFlagIndex === '0'">
-                <el-button @click="createProject" class="create-project-button">Create Project</el-button>
                 <el-table
-                    :data="tableData.projectLists"
-                    style="width: 100%"
-                    @selection-change="handleSelectionChange"
+                        :data="props.projectLists"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange"
                 >
-                    <el-table-column type="selection" width="55" />
-                    <el-table-column label="Name" prop="project_name" sortable/>
-                    <el-table-column label="Place" prop="place" />
-                    <el-table-column
-                        prop="tag"
-                        label="Tag"
-                        width="100"
-                        :filters="[
-            { text: 'ready', value: '1' },
-            { text: 'finish', value: '2' },
-          ]"
-                        :filter-method="filterTag"
-                        filter-placement="bottom-end"
-                    >
-                        <template #default="scope">
-                            <el-tag
-                                :type="scope.row.tag === '1' ? 'primary' : 'danger'"
-                                disable-transitions
-                            >
-                                {{ scope.row.tag === '1' ? 'ready' : 'finish' }}
-                            </el-tag>
-                        </template>
+                    <el-table-column type="selection" width="55" v-if="props.showCheckboxFlag"/>
+                    <el-table-column v-for="item in props.colNames" :label="item.label" :prop="item.prop" :sortable="item.sortFlag"/>
 
-                    </el-table-column>
                     <el-table-column align="right">
                         <template #header>
                             <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -60,25 +17,14 @@
                         <template #default="scope">
                             <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
                             <el-button
-                                size="small"
-                                type="danger"
-                                @click="handleDelete(scope.$index, scope.row)"
+                                    size="small"
+                                    type="danger"
+                                    @click="handleDelete(scope.$index, scope.row)"
                             >Delete</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
-            <ProjectCreate
-                v-else
-                @changeProjectFlag="changeProjectFlag"
-                :projectFlagIndex="projectFlagIndex"
-                :editProject="editProject">
-            </ProjectCreate>
-            <ConfirmDemo :confirmShowFlag="confirmShowFlag"
-                         :confirmTittle="confirmTittle"
-                         :confirmContext="confirmContext"
-                         @changeConfirmShowFlag="changeConfirmShowFlag">
-            </ConfirmDemo>
         </el-main>
     </el-container>
 
@@ -88,13 +34,10 @@
 <script lang="ts" setup>
 import {onMounted, reactive, ref} from 'vue'
 import {useRouter} from "vue-router";
-import ProjectCreate from "@/views/project/ProjectCreate.vue";
 import axios from "axios";
-import ConfirmDemo from "@/components/ConfirmDemo.vue";
-import Home from "@/views/home/Home.vue";
-import PageHeader from "@/LoginPage.vue";
 import LocalCache from "@/utils/catch";
 
+const props = defineProps(['projectLists', 'showCheckboxFlag', 'colNames'])
 interface Project {
     id: string,
     date: string
@@ -215,8 +158,8 @@ if(projectFlagIndex.value === "0"){
 
 </script>
 <style scoped>
-    .create-project-button {
-        display: flex;
-        margin-bottom: 10px;
-    }
+.create-project-button {
+    display: flex;
+    margin-bottom: 10px;
+}
 </style>
